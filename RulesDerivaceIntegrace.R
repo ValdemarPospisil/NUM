@@ -1,84 +1,68 @@
-expTalyor <- function(x, n=1){
+# Taylorova aproximace exponenciální funkce
+ExpTaylor <- function(x, n=1){
+  # Inicializace prvního členu a výsledku
   term <- rep(1, length(x))
-  res <- 1
+  res <- term
+  
+  # Výpočet dalších členů Taylorova rozvoje
   if(n > 1){
-    term <- term*x/(i-1)
-    res <- res + term
+    for(i in 2:n){
+      term <- term * x / (i-1)   # Další člen polynomu
+      res <- res + term          # Přičtení členu do výsledku
+    }
   }
   return(res)
 }
 
-a <- -3
-b <- 3
-x <- seq(a, b, 0.001)
-plot(exp, xlim = c(a,b), lwd=2)
+# Vykreslení aproximace
+x <- seq(-3, 3, 0.001)
+plot(exp, xlim=c(-3, 3), lwd=4, main="Taylorova aproximace exp(x)", col='black')
 for(i in 1:8){
-  lines(x, expTalyor(x, i), col=i+1+1)
+  lines(x, ExpTaylor(x, i), col=colors()[i+1], lwd=4)
 }
-#s---------------------------------
 
-FirstDerA <- function(f, x, h){return ((f(x+h)-f(x))/h)}
+# Výpočet derivací numericky
+FirstDerA <- function(f, x, h) {return((f(x+h)-f(x))/h)}
+FirstDerB <- function(f, x, h) {return((f(x+h)-f(x-h))/(2*h))}
+SecondDer <- function(f, x, h) {return((f(x+h)-2*f(x)+f(x-h))/(h*h))}
 
-FirstDerB <- function(f, x, h){return ((f(x+h)-f(x-h))/(2*h)}
+# Vykreslení první derivace
+plot(cos, xlim=c(0, 2*pi), lwd=4, main="První derivace sin(x)")
+plot(function(x) FirstDerA(sin, x, 1e-8), xlim=c(0, 2*pi), lwd=4, col=2, add=TRUE)
 
-SecondDer <- function(f, x, h){return ((f(x+h)-2*f(x-h))/(h*h)}
+# Porovnání numerických derivací
+plot(function(x) FirstDerA(sin, x, 1e-8)-cos(x), xlim=c(0,2*pi), lwd=4, main="Chyba první derivace")
+plot(function(x) FirstDerB(sin, x, 1e-8)-cos(x), xlim=c(0,2*pi), lwd=4, col='gray', add=TRUE)
+plot(function(x) FirstDerA(sin, x, 1e-7)-cos(x), xlim=c(0,2*pi), lwd=4, col='red', add=TRUE)
+plot(function(x) FirstDerB(sin, x, 1e-7)-cos(x), xlim=c(0,2*pi), lwd=4, col='pink', add=TRUE)
 
+# Druhá derivace
+plot(function(x) -sin(x), xlim=c(0,2*pi), lwd=4, main="Druhá derivace sin(x)")
+plot(function(x) SecondDer(sin, x, 1e-5), xlim=c(0,2*pi), lwd=4, col='green', add=TRUE)
 
-a <- 0
-b <- 2*pi
-plot(cos, xlim = c(a,b), lwd=2)
-h <- 0.000000005
-plot(function(x) FirstDerA(sin, x, h), xlim = c(a,b), lwd=2,col=2, add=TRUE)
-
-plot(function(x) FirstDerA(sin, x, h)-cos(x),xlim = c(a,b), lwd=2)
-h <- 0.0000000005
-plot(function(x) FirstDerB(sin, x, h)-cos(x),xlim = c(a,b), lwd=2, col='red', add=TRUE)
-
-plot(function(x) FirstDerA(sin, x, h)-cos(x),xlim = c(a,b), lwd=2, col='gray', add=TRUE)
-
-
-
-
-a <- 0
-b <- 2*pi
-plot(function(x) -sin(x), xlim = c(a,b), lwd=2)
-h <- 0.00005
-plot(function(x) SecondDer(sin, x, h), xlim = c(a,b), lwd=2,col='red', add=TRUE)
-
-
-# ------------------------------------------
-# Midpoint Rule
-
+# Pravidlo středu
 MidPointRule <- function(f, a, b, n=1){
   h <- (b-a)/n
-  return(h*sum(f(h*(1:n)+a-h*0.5)))
-  
-}  
+  return(h * sum(f(h * (1:n) + a - h/2)))
+}
 
+# Porovnání přesnosti pravidla středu
+cat("Přesné řešení int_a^b sin(x):", cos(0)-cos(pi), "\n")
+for(i in 0:20) cat("Pravidlo středu pro n =", 2^i, ":", MidPointRule(sin, 0, pi, 2^i), "\n")
 
-a <- 0
-b <- pi
-print(cos(a)-cos(b))
-
-cat("Exact solution int_a^b sin(x): ", cos(a)-cos(b), "\n")
-for(i in 0:10) cat("Midpoint rule for n: ", MidPointRule(sin, a , b, 2^i), "\n")
-
-# -----------------------------------
-# Simpsons rule
-
+# Simpsonovo pravidlo
 SimpsonRule <- function(f, a, b, n=1){
   h <- (b-a)/n
   hpul <- h/2
   suma <- f(a) + f(b)
   xs <- h*(1:n) + a - hpul
-  suma <- suma + sum(f(xs))
+  suma <- suma + 4*sum(f(xs))
   if(n > 1){
     xl <- (xs + hpul)[-n]
     suma <- suma + 2*sum(f(xl))
-  }  
+  }
   return(suma*h/6)
 }
 
-
-for(i in 0:20) cat("Simpson rule for n: ", SimpsonRule(sin, a , b, 2^i), "\n")
-
+# Porovnání Simpsonova pravidla
+for(i in 0:20) cat("Simpsonovo pravidlo pro n =", 2^i, ":", SimpsonRule(sin, 0, pi, 2^i), "\n")
