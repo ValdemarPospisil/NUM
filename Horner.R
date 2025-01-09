@@ -37,5 +37,6 @@ y <- exp(x)
 plot(x,y)
 m <- 4
 coef <- LSA(x, y, m)
+coefLASef <- LSAef(x, y, m)
 print(coef)
 plot(function(x) Horner(x, coef), add = TRUE, col='red', lw = 2, xlim = c(-1,1))

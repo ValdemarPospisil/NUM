@@ -75,7 +75,7 @@ points(inters, cos(inters), col = 'blue', cex = 2)
 cat("Intersection at:", inters, "\n")
 
 # Example 3: Chebyshev Polynomials
-a <- ChebyshevCoef(4)
+a <- ChebyshevCoef(7)
 x <- seq(-1, 1, 0.0001)
 chebyshev_values <- sapply(x, function(x) Horner(a, x)[1])
 plot(x, chebyshev_values, type = 'l', col = 'red', main = "Chebyshev Polynomial T4(x)", ylab = "T4(x)", xlab = "x")
