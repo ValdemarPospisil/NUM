@@ -1,0 +1,19 @@
+
+KI/NUM: zadání zápočtové úlohy
+Jiří Škvor
+16. dubna 2025
+
+Určete
+∫21(1/x)dx
+K řešení použijte vlastní implementaci libovolného z Newtonových-Cotesových vzorců.
+
+Výpočet proveďte pro různé počty dílků
+n=2i, kde i=0,…,20
+
+Vykreslete závislost
+y(i)=IN(i)−IA
+na proměnné i, kde y=IN je numerické řešení a IA je analytické řešení.
+
+Závislost aproximujte vhodně zvolenou funkcí.
+
+Očekává se, že se hodnota y bude s rostoucím i v intervalu 0,…,20 přibližovat k nule. Pokusně nalezněte takové i, pro které se hodnota y začne při dalším zjemňování dělení naopak od nuly vzdalovat.
